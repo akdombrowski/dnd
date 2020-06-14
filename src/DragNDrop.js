@@ -77,7 +77,6 @@ export default function DragNDrop({ ...props }) {
     if (!file) {
       return (
         <DropzoneArea
-          // dropzoneClass={classes.dropzoneArea}
           showPreviews={false}
           showPreviewsInDropzone={false}
           acceptedFiles={["image/*"]}
@@ -105,11 +104,9 @@ export default function DragNDrop({ ...props }) {
             src={file}
             style={{
               width: "auto",
-              height: "50%",
+              height: "100%",
               horizontalAlign: "middle",
               marginLeft: "-50%",
-              marginTop: "10%",
-              marginBottom: "10%",
             }}
             alt="preview"
           />
