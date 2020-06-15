@@ -1,26 +1,19 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
 import Grid from "@material-ui/core/Grid";
-import { sizing } from "@material-ui/system";
-import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import { DropzoneArea } from "material-ui-dropzone";
 import { ColorExtractor } from "react-color-extractor";
+import { DragBox } from "./DragBox";
+import { Example } from "./Example";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function DragNDrop({ ...props }) {
   const [file, setFile] = useState(0);
   const [uploaded, setUploaded] = useState(false);
   const [colors, setColors] = useState(0);
 
-  useEffect(() => {
-    console.log("useEffect file");
-    console.log(file);
-    if (file) {
-      setUploaded(true);
-    }
-    console.log(uploaded);
-  });
   const useStyles = makeStyles((theme) => ({
     root: {
       height: "100%",
@@ -74,42 +67,41 @@ export default function DragNDrop({ ...props }) {
   }, []);
 
   const imgOrText = () => {
-    if (!file) {
+    if (!uploaded) {
       return (
-        <DropzoneArea
-          showPreviews={false}
-          showPreviewsInDropzone={false}
-          acceptedFiles={["image/*"]}
-          filesLimit={1}
-          maxFileSize={50000000} // ~5GB
-          onDrop={onDrop}
-        />
+        <Grid
+          item
+          xs={12}
+          style={{
+            minHeight: 0,
+            overflow: "hidden",
+          }}
+        >
+          <DropzoneArea
+            showPreviews={false}
+            showPreviewsInDropzone={false}
+            acceptedFiles={["image/*"]}
+            filesLimit={1}
+            maxFileSize={50000000} // ~5GB
+            onDrop={onDrop}
+          />
+        </Grid>
       );
     }
   };
 
   return (
     <Container className={classes.root} disableGutters>
-      <Grid container>
+      <Grid container style={{ height: "100vh", maxHeight: "100vh" }}>
+        {imgOrText()}
         <Grid
           item
           xs={12}
-          style={{
-            overflow: "hidden",
-          }}
+          style={{ minHeight: "80vh", maxHeight: "100vh", overflow: "hidden" }}
         >
-          {imgOrText()}
-
-          <img
-            src={file}
-            style={{
-              width: "auto",
-              height: "100%",
-              horizontalAlign: "middle",
-              marginLeft: "-50%",
-            }}
-            alt="preview"
-          />
+          <DndProvider backend={HTML5Backend}>
+            <Example img={file} />
+          </DndProvider>
         </Grid>
       </Grid>
     </Container>
